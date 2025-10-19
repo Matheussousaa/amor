@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat com Amor 💖</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background-color: #111b21;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      width: 95%;
+      max-width: 400px; /* limite máximo para telas grandes */
+      height: 90vh;     /* ocupa quase toda a altura da tela do celular */
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== CABEÇALHO ===== */
+    .chat-header {
+      background-color: #075E54;
+      color: white;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      object-fit: cover;
+    }
+
+    .chat-header .info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header .info h2 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .chat-header .info span {
+      font-size: 13px;
+      color: #d0f0d0;
+    }
+
+    /* ===== CHAT ===== */
+    .chat-box {
+      flex: 1;
+      padding: 10px;
+      background-color: #ff4d4d; /* 🔴 fundo vermelho */
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-radius: 10px;
+      max-width: 75%;
+      word-wrap: break-word;
+      font-size: 15px;
+      line-height: 1.4;
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .from-me {
+      background-color: #DCF8C6;
+      align-self: flex-end;
+      border-bottom-right-radius: 0;
+    }
+
+    .from-anne {
+      background-color: #fff;
+      border: 1px solid #f1f1f1;
+      align-self: flex-start;
+      border-bottom-left-radius: 0;
+    }
+
+    .typing {
+      align-self: flex-start;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 15px;
+      color: #555;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .message-time {
+      font-size: 11px;
+      color: #999;
+      position: absolute;
+      bottom: 3px;
+      right: 8px;
+    }
+
+    /* ===== INPUT ===== */
+    .input-area {
+      display: flex;
+      align-items: center;
+      background-color: #f0f0f0;
+      padding: 10px;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 10px 15px;
+      border-radius: 25px;
+      border: none;
+      font-size: 15px;
+      outline: none;
+      background-color: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .btn-enviar {
+      background-color: #128C7E;
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .btn-enviar:hover {
+      background-color: #25D366;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-box::-webkit-scrollbar {
+      width: 5px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <!-- ===== CABEÇALHO ===== -->
+    <div class="chat-header">
+      <img src="WhatsApp Image 2025-10-19 at 17.40.07.jpeg" alt="Amor">
+      <div class="info">
+        <h2>Amor 💖</h2>
+        <span id="status">online</span>
+      </div>
+    </div>
+
+    <!-- ===== MENSAGENS ===== -->
+    <div class="chat-box" id="chatBox">
+      <div class="message from-anne">Oiii meu amor 💕</div>
+    </div>
+
+    <!-- ===== INPUT ===== -->
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Digite uma mensagem..." />
+      <button id="btnEnviar" class="btn-enviar">➤</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const btnEnviar = document.getElementById('btnEnviar');
+    const status = document.getElementById('status');
+
+    function enviarMensagem() {
+      const texto = userInput.value.trim();
+      if (texto === '') return;
+
+      const msgUser = document.createElement('div');
+      msgUser.className = 'message from-me';
+      msgUser.textContent = texto;
+      chatBox.appendChild(msgUser);
+      userInput.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      status.textContent = 'digitando...';
+      const typing = document.createElement('div');
+      typing.className = 'typing';
+      typing.textContent = 'digitando...';
+      chatBox.appendChild(typing);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const resposta = gerarResposta(texto);
+
+      setTimeout(() => {
+        chatBox.removeChild(typing);
+        status.textContent = 'online';
+
+        const msgAnne = document.createElement('div');
+        msgAnne.className = 'message from-anne';
+        msgAnne.textContent = resposta;
+        chatBox.appendChild(msgAnne);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 1500);
+    }
+
+    function gerarResposta(texto) {
+      const t = texto.toLowerCase();
+
+      if (t.includes("oi") || t.includes("olá")) return "Você está bem meu amor? 😍";
+      if (t.includes("te amo") || t.includes("amo você")) return "Ahh, eu também te amo amor da minha vida 💖💖💖";
+      if (t.includes("saudade")) return "Eu tô morrendo de saudade de você também amor 🥺💕";
+      if (t.includes("matheus")) return "Pra você é amor";
+      if (t.includes("beijo")) return "Muitos beijos pra você amor";
+      if (t.includes("tudo e você") || t.includes("e você vida") || t.includes("sim e você") || t.includes("sim e você amor") || t.includes("sim e você vida")) return "Estou bem meu amor";
+      if (t.includes("trabalho")) return "Aqui está tranquilo amor";
+      if (t.includes("que bom")) return "Está estudando amor?";
+      if (t.includes("estou sim vida") || t.includes("estou sim amor")) return "Que bom meu amor";
+      if (t.includes("namora comigo") || t.includes("namoraria comigo") || t.includes("me namora")) return "É claro que sim meu amor, te amo muito e eu sou todo seu";
+      if (t.includes("triste")) return "Não fica triste não... eu tô aqui pra te animar amor 💗";
+      if (t.includes("feliz")) return "Eu fico feliz só de saber que você tá feliz meu amor";
+      if (t.includes("foi bom amor") || t.includes("foi bom vida")) return "Muito bom minha maravilhosa";
+      if (t.includes("lindo") || t.includes("principe")) return "Você que é linda, maravilhosa e toda gostosa meu amor💓";
+
+      const respostasAleatorias = [
+        "Sempre se lembre que eu te amo meu amor",
+        "Você é a razão da minha felicidade",
+        "Como eu sou sortudo de ter você",
+        "Estou no trabalho mas queria está deitadinho ai do seu lado amor",
+        "Posso passar ai pra te dar uma sessão de beijos, carinhos e abraços meu amor? Se sim, me manda esse código no WhatsApp amor: 18092025",
+        "Eu estou fazendo uns testes aqui ainda meu amor, nesse chat",
+        "Vou te assumir pro mundo meu amor",
+        "Daqui a pouquinho estou de volta meu amor",
+        "Vou levar um chocolate pra você amor",
+        "Como foi o treino meu amor?"
+      ];
+
+      return respostasAleatorias[Math.floor(Math.random() * respostasAleatorias.length)];
+    }
+
+    btnEnviar.addEventListener('click', enviarMensagem);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') enviarMensagem();
+    });
+  </script>
+
+</body>
+</html>
